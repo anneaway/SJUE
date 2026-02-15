@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Mentale - Droit de l'Union Européenne</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .central-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 50px;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            margin: 0 auto 40px;
+            max-width: 600px;
+        }
+
+        .main-branch {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            border-left: 6px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .main-branch:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .branch-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .branch-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .sub-branches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .sub-branch {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #9f7aea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .sub-branch:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(159, 122, 234, 0.2);
+        }
+
+        .sub-branch-title {
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .sub-branch ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sub-branch li {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .sub-branch li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #9f7aea;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .date {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .important {
+            background: #fee2e2;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .central-node {
+                font-size: 1.3em;
+                padding: 20px 30px;
+            }
+            
+            .sub-branches {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .legend {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border: 2px solid #3b82f6;
+        }
+
+        .legend-title {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .toggle-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.active {
+            max-height: 2000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Carte Mentale - Droit de l'Union Européenne</h1>
+        
+        <div class="mindmap">
+            <div class="central-node">
+                🇪🇺 DROIT DE L'UNION EUROPÉENNE
+            </div>
+
+            <!-- CHAPITRE 0 : PRÉAMBULE -->
+            <div class="main-branch">
+                <div class="branch-title">
+                    <div class="branch-icon">0</div>
+                    Préambule - Origines de l'UE
+                </div>
+                <div class="sub-branches">
+                    <div class="sub-branch">
+                        <div class="sub-branch-title">🏛️ Racines historiques</div>
+                        <ul>
+                            <li>Empire romain : culture européenne commune</li>
+                            <li><span class="highlight">Victor Hugo</span> : "États-Unis d'Europe" (Congrès de la paix)</li>
+                            <li><span class="highlight">Winston Churchill (1946)</span> : reprise de l'idée</li>
+                        </ul>
+                    </div>
+                    <div class="sub-branch">
+                        <div class="sub-branch-title">⚖️ Situation actuelle</div>
+                        <ul>
+                            <li>Expression peu utilisée (connotation fédérale)</li>
+                            <li>Pas de volonté d'État fédéral européen</li>
+                            <li>États attachés à leur souveraineté</li>
+                            <li>Transfert important de compétences à l'UE</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPITRE 1 : CONSTRUCTION DU SYSTÈME JURIDIQUE -->
+            <div class="main-branch">
+                <div class="branch-title">
+                    <div class="branch-icon">1</div>
+                    Construction du Système Juridique
+                </div>
+                
+                <button class="toggle-btn" onclick="toggleSection('histoire-ancienne')">Afficher/Masquer Histoire ancienne</button>
+                <div id="histoire-ancienne" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🎯 Déclaration Schuman (<span class="date">9 mai 1950</span>)</div>
+                            <ul>
+                                <li>Acte de naissance de l'UE</li>
+                                <li>Robert Schuman + Jean Monnet</li>
+                                <li class="important">"L'Europe ne se fera pas d'un coup... mais par des réalisations concrètes créant d'abord une solidarité de fait"</li>
+                                <li><span class="highlight">Politique des petits pas</span></li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📜 Premiers traités</div>
+                            <ul>
+                                <li><span class="date">1952</span> : CECA (expirée en 2002)</li>
+                                <li><span class="date">25 mars 1957</span> : Traités de Rome (CEE + Euratom)</li>
+                                <li><span class="highlight">6 États fondateurs</span> : France, Allemagne, Italie, Belgique, Luxembourg, Pays-Bas</li>
+                                <li><span class="date">1987</span> : Acte unique européen</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🎯 Objectifs initiaux</div>
+                            <ul>
+                                <li>Marché intérieur unique</li>
+                                <li>Abolition des frontières intérieures</li>
+                                <li>Frontière extérieure commune</li>
+                                <li>Suppression des droits de douane</li>
+                                <li><span class="highlight">4 libertés de circulation</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="toggle-btn" onclick="toggleSection('histoire-moderne')">Afficher/Masquer Histoire moderne</button>
+                <div id="histoire-moderne" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🏗️ Traité de Maastricht (<span class="date">1992-1993</span>)</div>
+                            <ul>
+                                <li>CEE → Communauté européenne</li>
+                                <li>Création de l'Union européenne</li>
+                                <li><span class="highlight">Structure en 3 piliers</span> :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>1️⃣ Pilier communautaire</li>
+                                        <li>2️⃣ PESC (intergouvernemental)</li>
+                                        <li>3️⃣ Coopération JAI (intergouvernemental)</li>
+                                    </ul>
+                                </li>
+                                <li>Citoyenneté européenne</li>
+                                <li>Union économique et monétaire</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📋 Traité d'Amsterdam (<span class="date">1997-1999</span>)</div>
+                            <ul>
+                                <li>Droits fondamentaux des citoyens</li>
+                                <li>Espace de liberté, sécurité et justice</li>
+                                <li>Bases de l'Europe sociale</li>
+                                <li>Parquet européen</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">⚙️ Traité de Nice (<span class="date">2001-2003</span>)</div>
+                            <ul>
+                                <li>Jugé décevant (réforme institutionnelle limitée)</li>
+                                <li>Charte des droits fondamentaux proclamée et annexée</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📜 Projet constitutionnel (<span class="date">2004</span>)</div>
+                            <ul>
+                                <li>Convention présidée par Valéry Giscard d'Estaing</li>
+                                <li>Vocabulaire emprunté aux États modernes</li>
+                                <li><span class="highlight">Rejeté par France et Pays-Bas</span></li>
+                                <li>Crise constitutionnelle majeure</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">✅ Traité de Lisbonne (<span class="date">2007-2009</span>)</div>
+                            <ul>
+                                <li>Impulsé par Nicolas Sarkozy</li>
+                                <li><span class="highlight">Fusion des piliers</span></li>
+                                <li>Disparition de la CE</li>
+                                <li>TUE + TFUE</li>
+                                <li>Conseil européen = institution (art. 13 TUE)</li>
+                                <li>Président du Conseil européen : António Costa</li>
+                                <li>Haut représentant UE : Kaja Kallas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="toggle-btn" onclick="toggleSection('constitutionnalisation')">Afficher/Masquer Constitutionnalisation</button>
+                <div id="constitutionnalisation" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">⚖️ Caractère constitutionnel</div>
+                            <ul>
+                                <li>Avis 1/76 (27 avril 1977) : "constitution interne"</li>
+                                <li class="important">Arrêt Les Verts (23 avril 1986) : "communauté de droit" = État de droit</li>
+                                <li>Traités = "charte constitutionnelle de base"</li>
+                                <li>Contrôle juridictionnel non expressément prévu</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🎯 Objectifs communs (art. 3 TUE)</div>
+                            <ul>
+                                <li>Protection de l'environnement</li>
+                                <li>Justice sociale</li>
+                                <li>Marché intérieur</li>
+                                <li>Cohésion économique et sociale</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🏴 Symboles communs</div>
+                            <ul>
+                                <li>Drapeau européen (12 étoiles)</li>
+                                <li>Hymne : Ode à la joie</li>
+                                <li>Devise : "Unie dans la diversité"</li>
+                                <li>9 mai : journée de l'Europe</li>
+                                <li>Monnaie unique (€)</li>
+                                <li class="important">Disparus du traité de Lisbonne (déclaration n°52)</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">⭐ Valeurs (art. 2 TUE)</div>
+                            <ul>
+                                <li>Dignité humaine</li>
+                                <li>Liberté</li>
+                                <li>Démocratie</li>
+                                <li>Égalité</li>
+                                <li><span class="highlight">État de droit</span> (fragilisé en Hongrie et Pologne)</li>
+                                <li>Droits de l'homme et minorités</li>
+                                <li class="important">Procédure art. 7 TUE : suspension du droit de vote</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="toggle-btn" onclick="toggleSection('droits-fondamentaux')">Afficher/Masquer Droits fondamentaux</button>
+                <div id="droits-fondamentaux" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📈 Élaboration jurisprudentielle</div>
+                            <ul>
+                                <li><span class="date">1969</span> - Stauder : principes généraux du droit</li>
+                                <li><span class="date">1970</span> - Internationale Handelsgesellschaft : traditions constitutionnelles communes</li>
+                                <li><span class="date">1974</span> - Nold : référence aux instruments internationaux (CEDH)</li>
+                                <li><span class="date">1975</span> - Rutili : CEDH comme instrument privilégié</li>
+                                <li><span class="date">1998</span> - Baustahlgewebe : CEDH source autonome</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📜 Consécration textuelle progressive</div>
+                            <ul>
+                                <li><span class="date">1986</span> - Acte unique : préambule mentionne DF</li>
+                                <li><span class="date">1992</span> - Maastricht : art. F codifie jurisprudence + citoyenneté</li>
+                                <li><span class="date">1997</span> - Amsterdam : art. 6 "l'Union est fondée sur..."</li>
+                                <li>Extension droits civils et sociaux</li>
+                                <li>Non-discrimination élargie</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📋 Charte des droits fondamentaux</div>
+                            <ul>
+                                <li><span class="date">Déc. 2000</span> : proclamée à Nice (sans valeur contraignante)</li>
+                                <li>Utilisée comme source d'inspiration</li>
+                                <li class="important">Traité de Lisbonne : valeur juridique = traités (art. 6§1 TUE)</li>
+                                <li>Arrêt Åkerberg Fransson (2013) : s'applique si situation relève du droit UE</li>
+                                <li>Shoktareva (2024) : irrecevabilité hors champ UE</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🤝 Adhésion CEDH (programmée)</div>
+                            <ul>
+                                <li>Avis 2/94 (1996) : refus, pas de compétence</li>
+                                <li>Lisbonne : art. 6§2 TUE prévoit adhésion</li>
+                                <li>Avis 2/13 (2014) : projet incompatible (autonomie UE)</li>
+                                <li>Négociations "46+1" depuis 2020</li>
+                                <li>Obstacle : contrôle actes PESC</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🏢 Agence des droits fondamentaux</div>
+                            <ul>
+                                <li>Créée <span class="date">15 février 2007</span></li>
+                                <li>Surveillance respect DF</li>
+                                <li>Expertise juridique</li>
+                                <li>Assistance institutions + États</li>
+                                <li>Pas de pouvoir normatif ni répressif</li>
+                                <li>Rôle : conditionnalité État de droit, mandat d'arrêt européen</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPITRE 2 : COMPÉTENCES -->
+            <div class="main-branch">
+                <div class="branch-title">
+                    <div class="branch-icon">2</div>
+                    Compétences de l'Union Européenne
+                </div>
+                
+                <button class="toggle-btn" onclick="toggleSection('institutions')">Afficher/Masquer Répartition institutionnelle</button>
+                <div id="institutions" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🏛️ Fonction législative</div>
+                            <ul>
+                                <li><span class="highlight">Conseil de l'UE</span> : légitimité intergouvernementale, représente États</li>
+                                <li><span class="highlight">Parlement européen</span> : légitimité démocratique, représente peuples</li>
+                                <li>Élus au suffrage universel direct depuis 1979 (5 ans)</li>
+                                <li>Codécision quasi égalitaire</li>
+                                <li>Art. 223 TFUE : procédure électorale uniforme</li>
+                                <li>Présidence tournante du Conseil (actuellement Chypre)</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">⚙️ Fonction exécutive</div>
+                            <ul>
+                                <li><span class="highlight">Commission européenne</span> : légitimité intégrative</li>
+                                <li>Double dimension : horizontale (interinstitutionnelle) + verticale (UE-États)</li>
+                                <li>Rôles :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>🛡️ Gardienne des traités</li>
+                                        <li>💡 Pouvoir de proposition</li>
+                                        <li>⚖️ Pouvoir de décision propre</li>
+                                        <li>🔧 Exécution missions confiées</li>
+                                    </ul>
+                                </li>
+                                <li>Principe de subsidiarité : État = exécutif prioritaire</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">⚖️ Fonction contentieuse</div>
+                            <ul>
+                                <li><span class="highlight">CJUE</span> : pouvoir juridictionnel</li>
+                                <li>2 formations : Cour de justice + Tribunal</li>
+                                <li>Art. 19 TUE : respect du droit UE</li>
+                                <li>Recours :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>📋 Annulation</li>
+                                        <li>⏸️ Carence</li>
+                                        <li>💰 Indemnité/responsabilité</li>
+                                        <li>⚠️ Manquement</li>
+                                        <li>❓ Renvoi préjudiciel</li>
+                                        <li>🚫 Exception d'illégalité</li>
+                                    </ul>
+                                </li>
+                                <li class="important">Compétences d'attribution uniquement</li>
+                                <li>Juge national = "juge communautaire de droit commun"</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🎯 Conseil européen</div>
+                            <ul>
+                                <li>Institution depuis Lisbonne (art. 13 TUE)</li>
+                                <li>Chefs d'État ou de gouvernement</li>
+                                <li>Rôle : impulsion + coordination politique</li>
+                                <li>2 réunions/semestre (+ si crise)</li>
+                                <li>Qualifié de "chef collégial" / "gouvernement UE"</li>
+                                <li>Président : António Costa</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="toggle-btn" onclick="toggleSection('competences-etats')">Afficher/Masquer Compétences États/UE</button>
+                <div id="competences-etats" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🗺️ Compétences des États</div>
+                            <ul>
+                                <li><span class="highlight">Réservées</span> : UE n'a aucun titre</li>
+                                <li><span class="highlight">Coordonnées</span> : action ensemble sans règles communes (PESC, JAI)</li>
+                                <li><span class="highlight">Encadrées</span> : États compétents, actes encadrés par UE (directives)</li>
+                                <li><span class="highlight">Transférées</span> : États plus compétents (PAC)</li>
+                                <li><span class="highlight">Abolies</span> : ni États ni UE (barrières douanières)</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🇪🇺 Catégories de compétences UE (art. 2 TFUE)</div>
+                            <ul>
+                                <li><span class="highlight">Exclusives</span> (art. 3) : seule UE compétente
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>Union douanière, politique monétaire, commerciale</li>
+                                        <li>États peuvent agir si habilités</li>
+                                    </ul>
+                                </li>
+                                <li><span class="highlight">Partagées</span> (art. 4) : provisoires
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>État libre tant que UE pas intervenue</li>
+                                        <li>Ex: transports, mobilité douce</li>
+                                    </ul>
+                                </li>
+                                <li><span class="highlight">Coordination</span> (art. 2§3) : politiques économiques et emploi</li>
+                                <li><span class="highlight">PESC</span> (art. 2§4)</li>
+                                <li><span class="highlight">Appui</span> (art. 6) : compléter sans substituer
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>Industrie, culture, tourisme, éducation</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="toggle-btn" onclick="toggleSection('principes')">Afficher/Masquer Principes régulateurs</button>
+                <div id="principes" class="collapsible-content">
+                    <div class="sub-branches">
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">📊 Principe d'attribution</div>
+                            <ul>
+                                <li>UE = compétences d'attribution uniquement</li>
+                                <li>Art. 4 et 5 TUE + déclarations 18, 24, 1</li>
+                                <li class="important">Réversibilité des compétences partagées (décl. 18)</li>
+                                <li>Types :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>✅ Explicites : énumérées dans traités</li>
+                                        <li>🔍 Implicites : nécessaires aux objectifs (AETR 1971)</li>
+                                        <li>➕ Ajoutées : clause flexibilité (art. 352 TFUE)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🎚️ Principe de subsidiarité (art. 5§3 TUE)</div>
+                            <ul>
+                                <li>UE agit si États ne peuvent pas mieux réaliser objectif</li>
+                                <li>Ne s'applique PAS aux compétences exclusives</li>
+                                <li>Protocole : consultations + transmission parlements</li>
+                                <li>Système d'alerte :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>🟨 Carton jaune : parlement s'oppose</li>
+                                        <li>🟧 Carton orange : 1/3 chambres</li>
+                                        <li>🟥 Carton rouge : saisine CJUE</li>
+                                    </ul>
+                                </li>
+                                <li>France : art. 88-6 Constitution</li>
+                                <li>Justiciabilité relative (complexe, politique)</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">⚖️ Principe de proportionnalité (art. 5§4 TUE)</div>
+                            <ul>
+                                <li>S'applique à TOUTES compétences (y compris exclusives)</li>
+                                <li>PGD (Ferrière Valsabbia 1980)</li>
+                                <li>3 dimensions :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>1️⃣ Aptitude : objectivement apte</li>
+                                        <li>2️⃣ Nécessité : mesure la moins attentatoire</li>
+                                        <li>3️⃣ Proportionnalité stricto sensu : pondération intérêts</li>
+                                    </ul>
+                                </li>
+                                <li>Rarement annulation (large pouvoir appréciation)</li>
+                                <li>Protocole + contrôle parlements nationaux</li>
+                            </ul>
+                        </div>
+                        <div class="sub-branch">
+                            <div class="sub-branch-title">🤝 Principe de coopération loyale (art. 4§3 TUE)</div>
+                            <ul>
+                                <li>Traduction bonne foi + pacta sunt servanda</li>
+                                <li>Engagement réciproque UE ⟷ États</li>
+                                <li>États :
+                                    <ul style="margin-left: 20px; margin-top: 5px;">
+                                        <li>➕ Obligation positive : exécuter droit UE</li>
+                                        <li>➖ Obligation négative : ne pas mettre en péril objectifs</li>
+                                    </ul>
+                                </li>
+                                <li>S'applique même hors compétences UE</li>
+                                <li>Institutions doivent aussi respecter États</li>
+                                <li>Portée très large</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-title">📖 Légende</div>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>🗓️ <span class="date">Dates</span> : événements historiques clés</li>
+                <li>⭐ <span class="highlight">Surligné</span> : concepts importants</li>
+                <li>❗ <span style="background: #fee2e2; padding: 2px 6px; border-radius: 4px;">Important</span> : éléments cruciaux à retenir</li>
+                <li>📊 Utilisez les boutons pour afficher/masquer les sections détaillées</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('active');
+        }
+
+        // Ajouter animation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const branches = document.querySelectorAll('.main-branch');
+            branches.forEach((branch, index) => {
+                branch.style.opacity = '0';
+                branch.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    branch.style.transition = 'all 0.5s ease';
+                    branch.style.opacity = '1';
+                    branch.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
